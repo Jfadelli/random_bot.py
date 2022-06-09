@@ -35,7 +35,7 @@ async def on_message(message):
         if ".d " in split_message[0]:
             split_message[0] = split_message[0].replace(".d ","")
 
-        if ".d " in split_message[0]:
+        if ".decide " in split_message[0]:
             split_message[0] = split_message[0].replace(".decide ","")
 
         if len(split_message) == 1:
