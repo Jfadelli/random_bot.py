@@ -10,6 +10,21 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 
+def find_command(message):
+    command_words = [".decide", ".d"]
+    
+    for word in message.split(" "):
+        if word in command_words:
+            return [message.find(word), word]
+        else:
+            return None
+
+def message_parser(message):
+    curr_command = find_command(message)[1]
+    curr_list = message.split(", ")
+    curr_list[0] = curr_list[0][(len(curr_command)+1)::]
+    return curr_list
+    
 @client.event
 async def on_ready():
     print(f'{client.user.name} has connected to Discord!')
@@ -26,27 +41,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    # command_words = [".decide", ".d"]
-
-    # check if user message contains command_words, i.e. .d or .decide
-    if message.content == '.d' or '.decide' :
-        split_message = message.content.split(", ")
-
-        if ".d " in split_message[0]:
-            split_message[0] = split_message[0].replace(".d ","")
-
-        if ".decide " in split_message[0]:
-            split_message[0] = split_message[0].replace(".decide ","")
-
-        if len(split_message) == 1:
-            games = ["CS:GO", "Planetside 2", "PUBG "]
-            
-        if len(split_message) > 1:
-            games = []
-            for i in split_message:
-                games.append(i)
-
-        response = random.choice(games)
-        await message.channel.send(response)    
+    response = random.choice(message_parser(message.content))
+    await message.channel.send(response)    
 
 client.run(TOKEN)
